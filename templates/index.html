@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotniska App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/styles.css"> 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../static/js/script.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Lotniska App</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Lista Lotnisk
+        </div>
+        <div class="card-body"> 
+            <button class="btn btn-primary" onclick="przekieruj_1()">Pokaż</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Przyloty/Odloty w konkretnym dniu
+        </div>
+        <div class="card-body">
+            <button onclick="przekieruj_2()" class="btn btn-primary">Pokaż</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Liczba Pasażerów na Lotnisku
+        </div>
+        <div class="card-body">
+            <button onclick="przekieruj_3()" class="btn btn-primary">Pokaż</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Najczęściej Używane Samoloty
+        </div>
+        <div class="card-body">
+            <button onclick="przekieruj_4()" class="btn btn-primary">Pokaż</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Pracownicy na Lotnisku
+        </div>
+        <div class="card-body">
+            <button onclick="przekieruj_5()" class="btn btn-primary">Pokaż</button>
+        </div>
+        <ul id="pracownicy-list" class="list-group list-group-flush"></ul>
+    </div>
+</div>
+
+</body>
+</html>

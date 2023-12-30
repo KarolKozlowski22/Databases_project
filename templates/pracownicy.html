@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminarz</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../static/js/pracownicy.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container mt-5">
+    <div class="form-group">
+        <label for="pracownicy-lotnisko-id">Lotnisko ID:</label>
+        <input type="number" placeholder="Lotnisko ID" id="pracownicy-lotnisko-id" class="form-control">
+        <button class="btn btn-primary" onclick="znajdzPracownikow()">Pokaż</button>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="mb-4">Pracownicy na danym lotnisku</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                    
+                    </tr>
+                </thead>
+                <tbody id="pracownicy-table"></tbody>
+            </table>
+        </div>
+    </div>
+    <button class="btn btn-primary mt-3" onclick="glownaStrona()">Powrót do strony głównej</button>
+</div>
+
+
+</body>
+
+</html>

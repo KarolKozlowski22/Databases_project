@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminarz</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../static/js/terminarz.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container mt-5">
+    <div class="form-group">
+        <label for="data-input">Data:</label>
+        <input type="date" id="data-input" class="form-control">
+        <button class="btn btn-primary" onclick="pobierzTerminarz()">Pokaż</button>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+        <h2 class="mb-4">Terminarz Lotów</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Lotnisko</th>
+                        <th>Data Przylotu</th>
+                        <th>Numer Przylotu</th>
+                        <th>Data Odlotu</th>
+                        <th>Numer Odlotu</th>
+                    </tr>
+                </thead>
+                <tbody id="terminarz-table"></tbody>
+            </table>
+        </div>  
+    </div>
+    
+    <button class="btn btn-primary mt-3" onclick="glownaStrona()">Powrót do strony głównej</button>
+</div>
+
+
+</body>
+
+</html>
