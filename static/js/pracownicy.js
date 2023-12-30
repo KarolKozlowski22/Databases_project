@@ -25,6 +25,3 @@ function znajdzPracownikow() {
     xhr.send();
 }
 
-function glownaStrona(){
-    window.location.href = '/main';
-}

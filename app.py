@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
 
 db=SQLAlchemy(app)
 
-@app.route('/lotniska')
+@app.route('/lotniska', methods=['GET'])
 def get_lotniska():
     try:
         connection = db.engine.connect()
@@ -73,7 +73,7 @@ def get_przyloty_odloty():
 
 
 
-@app.route('/liczba_pasazerow_na_lotnisku')
+@app.route('/liczba_pasazerow_na_lotnisku', methods=['GET'])
 def liczba_pasazerow_na_lotnisku():
     try:
         raw_query = text('''
@@ -104,7 +104,7 @@ def liczba_pasazerow_na_lotnisku():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/najczesciej_uzywane_samoloty')
+@app.route('/najczesciej_uzywane_samoloty', methods=['GET'])
 def najczesciej_uzywane_samoloty():
     try:
         lotnisko_id = request.args.get('lotnisko_id')
@@ -142,7 +142,7 @@ def najczesciej_uzywane_samoloty():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/pracownicy_na_lotnisku')
+@app.route('/pracownicy_na_lotnisku', methods=['GET'])
 def pracownicy_na_lotnisku():
     try:
         lotnisko_id = request.args.get('lotnisko_id')

@@ -29,8 +29,6 @@ function pobierzTerminarz() {
     xhr.send();
 }
 
-function glownaStrona(){
-    window.location.href = '/main';
-}
+
 
 

@@ -18,4 +18,8 @@ function przekieruj_5() {
     window.location.href = '/pracownicy';
 }
 
+function glownaStrona(){
+    window.location.href = '/main';
+}
+
 

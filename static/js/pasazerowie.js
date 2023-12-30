@@ -24,7 +24,3 @@ function getPasazerowie() {
         }
     });
 }
-
-function glownaStrona(){
-    window.location.href = '/main';
-}

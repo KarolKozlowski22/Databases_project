@@ -24,7 +24,3 @@ function getLotniska() {
         }
     });
 }
-
-function glownaStrona(){
-    window.location.href = '/main';
-}
