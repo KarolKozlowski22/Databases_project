@@ -39,8 +39,7 @@ The Airports Database Project focuses on managing and displaying information rel
 
 2. Enter folder and run docker-compose.
 
-   cd Databases_project
-   docker-compose up --build
+   cd Databases_project && docker-compose up --build
 
 3. Enter pgadmin container under localhost:5050 and log in with the following credentials:
 
@@ -51,8 +50,8 @@ The Airports Database Project focuses on managing and displaying information rel
     
     - Host name/address: postgres
     - Port: 5432
-    - Username: postgres
-    - Password: postgres
+    - Username: root
+    - Password: root
 
     You can also find Host address by running `docker inspect postgres` and looking for the "IPAddress" field. Linux: 'docker inspect postgres | grep IPAddress', Windows: 'docker inspect postgres | findstr IPAddress'.
 
