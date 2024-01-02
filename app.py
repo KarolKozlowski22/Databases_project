@@ -1,6 +1,9 @@
 from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import text
+from sqlalchemy import text, inspect, insert
+from sqlalchemy.exc import NoSuchTableError
+
+import json
 
 
 from os import environ
@@ -10,25 +13,28 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
 
 db=SQLAlchemy(app)
 
-@app.route('/lotniska', methods=['GET'])
-def get_lotniska():
+@app.route('/dane', methods=['GET'])
+def get_dane():
     try:
+        tabela = request.args.get('tabela')
+
+        if tabela is None:
+            return jsonify({'error': 'Brak nazwy tabeli'}, 400)
+
         connection = db.engine.connect()
-        raw_query = text('SELECT * FROM lotnisko;')
+        raw_query = text(f'SELECT * FROM {tabela};')
         result = connection.execute(raw_query)
 
-        lotniska_list = []
-        for row in result:
-            lotnisko_dict = {
-                'lotnisko_id': row[0],
-                'nazwa_lotniska': row[1],
-                'miasto': row[2],
-                'kod_lotniska': row[3],
-                'kraj': row[4]
-            }
-            lotniska_list.append(lotnisko_dict)
+        dane_list = []
+        columns = result.keys()
 
-        return jsonify({'lotniska': lotniska_list}, 200)
+        for row in result:
+            dane_dict = dict(zip(columns, row))
+            dane_list.append(dane_dict)
+
+        # Użyj modułu json do obsługi niestandardowych typów
+        dane_json = json.dumps({'dane': dane_list}, default=str)
+        return app.response_class(response=dane_json, status=200, mimetype='application/json')
     except Exception as e:
         return jsonify({'error': str(e)}, 500)
 
@@ -175,6 +181,50 @@ def pracownicy_na_lotnisku():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/kolumny-tabeli', methods=['GET'])
+def get_kolumny_tabeli():
+    tabela = request.args.get('tabela')
+
+    if tabela is None:
+        return jsonify({'error': 'Brak nazwy tabeli'}, 400)
+
+    inspector = inspect(db.engine)
+
+    if not inspector.has_table(tabela):
+        return jsonify({'error': 'Tabela nie istnieje'}, 404)
+
+    kolumny = [column['name'] for column in inspector.get_columns(tabela)]
+    
+    return jsonify({'kolumny': kolumny})
+
+
+
+@app.route('/wykonaj-alter-table', methods=['POST'])
+def wykonaj_alter_table():
+    tabela = request.args.get('tabela')
+
+    if tabela is None:
+        return jsonify({'error': 'Brak nazwy tabeli'}, 400)
+
+    inspector = inspect(db.engine)
+    
+    try:
+        if tabela not in inspector.get_table_names():
+            raise NoSuchTableError(tabela)
+
+        dane = request.get_json()
+
+        try:
+            connection = db.engine.connect()
+
+            insert_stmt = insert(tabela).values(dane)
+            connection.execute(insert_stmt)
+
+            return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    except NoSuchTableError:
+        return jsonify({'error': 'Tabela nie istnieje'}, 404)
 
 
 
@@ -184,7 +234,7 @@ def glowna_strona():
 
 @app.route('/tabela_lotnisk')
 def tabela_lotnisk():
-    return render_template('lotniska.html')
+    return render_template('tabele.html')
 
 @app.route('/tabela_przylotow_odlotow')
 def tabela_przylotow_odlotow():
@@ -201,5 +251,9 @@ def uzywane_samoloty():
 @app.route('/pracownicy')
 def pracownicy():
     return render_template('pracownicy.html')
+
+@app.route('/dodawanie')
+def dodawanie():
+    return render_template('dodawanie.html')
 
 

@@ -18,6 +18,10 @@ function przekieruj_5() {
     window.location.href = '/pracownicy';
 }
 
+function przekieruj_6() {
+    window.location.href = '/dodawanie';
+}
+
 function glownaStrona(){
     window.location.href = '/main';
 }

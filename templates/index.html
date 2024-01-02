@@ -17,10 +17,19 @@
 
     <div class="card mb-4">
         <div class="card-header">
-            Lista Lotnisk
+            Zawartość konkretnej tabeli
         </div>
         <div class="card-body"> 
             <button class="btn btn-primary" onclick="przekieruj_1()">Pokaż</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Dodaj rekord do konkretnej tabeli
+        </div>
+        <div class="card-body"> 
+            <button class="btn btn-primary" onclick="przekieruj_6()">Pokaż</button>
         </div>
     </div>
 
@@ -59,6 +68,26 @@
             <button onclick="przekieruj_5()" class="btn btn-primary">Pokaż</button>
         </div>
         <ul id="pracownicy-list" class="list-group list-group-flush"></ul>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Usuń zawartość konkretnej tabeli
+        </div>
+        <div class="form-group">
+            <label for="select-table">Wybierz tabelę:</label>
+            <select id="select-table" class="form-control">
+                <option value="lotnisko">Lotnisko</option>
+                <option value="arrivals_airports">Przyloty</option>
+                <option value="departures_airports">Odloty</option>
+                <option value="pas_startowy">Pas Startowy</option>
+                <option value="pasazer">Pasazer</option>
+                <option value="pasazer_odlot">Pasazer Odlot</option>
+                <option value="pasazer_przylot">Pasazer Przylot</option>
+                <option value="pracownik">Pracownik</option>
+                <option value="samolot">Samolot</option>
+            </select>
+        </div>
     </div>
 </div>
 
