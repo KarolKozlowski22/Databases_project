@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotniska</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../static/js/usuwanie.js"></script>
+    <script src="../static/js/script.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="form-group">
+            <label for="select-table">Wybierz tabelę:</label>
+            <select id="select-table" class="form-control">
+                <option value="lotnisko">Lotnisko</option>
+                <option value="przyloty">Przyloty</option>
+                <option value="odloty">Odloty</option>
+                <option value="pas_startowy">Pas Startowy</option>
+                <option value="pasazer">Pasazer</option>
+                <option value="pasazer_odlot">Pasazer Odlot</option>
+                <option value="pasazer_przylot">Pasazer Przylot</option>
+                <option value="pracownik">Pracownik</option>
+                <option value="samolot">Samolot</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="generujFormularz()">Pokaż</button>
+        </div>
+        <div id="formularz-div"></div>
+    
+        <button class="btn btn-primary mt-3" onclick="glownaStrona()">Powrót do strony głównej</button>
+    </div>
+    
+    
+    
+</body>
+</html>

@@ -26,4 +26,8 @@ function glownaStrona(){
     window.location.href = '/main';
 }
 
+function przekieruj_7() {
+    window.location.href = '/usuwanie';
+}
+
 

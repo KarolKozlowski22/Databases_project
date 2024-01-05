@@ -1,7 +1,8 @@
 from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text, inspect, insert
-from sqlalchemy.exc import NoSuchTableError
+from sqlalchemy.exc import NoSuchTableError, IntegrityError
+from models.models import Lotnisko, Przyloty, Odloty, PasStartowy, Pasazer, Samolot, Pracownik, db
 
 import json
 
@@ -11,7 +12,10 @@ from os import environ
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
 
-db=SQLAlchemy(app)
+
+with app.app_context():
+    db.init_app(app)
+    db.create_all()
 
 @app.route('/dane', methods=['GET'])
 def get_dane():
@@ -32,7 +36,6 @@ def get_dane():
             dane_dict = dict(zip(columns, row))
             dane_list.append(dane_dict)
 
-        # Użyj modułu json do obsługi niestandardowych typów
         dane_json = json.dumps({'dane': dane_list}, default=str)
         return app.response_class(response=dane_json, status=200, mimetype='application/json')
     except Exception as e:
@@ -201,31 +204,113 @@ def get_kolumny_tabeli():
 
 @app.route('/wykonaj-alter-table', methods=['POST'])
 def wykonaj_alter_table():
-    tabela = request.args.get('tabela')
-
-    if tabela is None:
-        return jsonify({'error': 'Brak nazwy tabeli'}, 400)
-
-    inspector = inspect(db.engine)
-    
     try:
-        if tabela not in inspector.get_table_names():
-            raise NoSuchTableError(tabela)
+        tabela = request.args.get('tabela')
 
-        dane = request.get_json()
+        if tabela is None:
+            return jsonify({'error': 'Brak nazwy tabeli'}, 400)
+
+        inspector = inspect(db.engine)
 
         try:
-            connection = db.engine.connect()
+            if tabela not in inspector.get_table_names():
+                raise NoSuchTableError(tabela)
 
-            insert_stmt = insert(tabela).values(dane)
-            connection.execute(insert_stmt)
+            dane = request.get_json()
+            model_class = globals().get(tabela.capitalize())  
+            if not model_class:
+                raise NoSuchTableError(tabela)
 
-            return jsonify({'success': True})
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-    except NoSuchTableError:
-        return jsonify({'error': 'Tabela nie istnieje'}, 404)
+            columns = model_class.__table__.columns.keys()
+            valid_keys = [key for key in dane.keys() if key in columns]
 
+            data_to_insert = {key: dane[key] for key in valid_keys}
+
+            try:
+                new_record = model_class(**data_to_insert)
+                db.session.add(new_record)
+                db.session.commit()
+                return jsonify({'success': True})
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+                return jsonify({'error': str(e)}), 500
+        except NoSuchTableError:
+            return jsonify({'error': 'Tabela nie istnieje'}, 404)
+    except Exception as e:
+        print(e)
+        return jsonify({'error': str(e)}), 500
+    
+# @app.route('/usun', methods=['DELETE'])
+# def usun_wiersz():
+#     try:
+#         tabela = request.args.get('tabela')
+#         id_field_name = f'{tabela.lower()}_id'
+#         id_value = request.args.get('id')
+
+#         if tabela is None or id_value is None:
+#             return jsonify({'error': 'Brak nazwy tabeli lub ID'}, 400)
+
+#         inspector = inspect(db.engine)
+
+#         try:
+#             if tabela not in inspector.get_table_names():
+#                 raise NoSuchTableError(tabela)
+
+#             model_class = globals().get(tabela.capitalize())
+
+#             if not model_class:
+#                 raise NoSuchTableError(tabela)
+#             print(f'DELETE FROM {tabela} WHERE {id_field_name} = {id_value}')
+#             raw_query = text(f'DELETE FROM {tabela} WHERE {id_field_name} = :id_value')
+#             connection = db.engine.connect()
+#             connection.execute(raw_query, {'id_value': id_value})
+#             db.session.commit()
+#             return jsonify({'success': True})
+#         except NoSuchTableError:
+#             return jsonify({'error': 'Tabela nie istnieje'}, 404)
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'error': str(e)}), 500
+    
+@app.route('/usun', methods=['DELETE'])
+def usun_wiersz():
+    try:
+        tabela = request.args.get('tabela')
+        id_field_name = f'{tabela.lower()}_id'
+        id_value = request.args.get('id')
+
+        if tabela is None or id_value is None:
+            return jsonify({'error': 'Brak nazwy tabeli lub ID'}, 400)
+
+        inspector = inspect(db.engine)
+
+        try:
+            if tabela not in inspector.get_table_names():
+                raise NoSuchTableError(tabela)
+
+            model_class = globals().get(tabela.capitalize())
+
+            if not model_class:
+                raise NoSuchTableError(tabela)
+
+            record_to_delete = model_class.query.get(id_value)
+
+            if not record_to_delete:
+                return jsonify({'error': 'Nie znaleziono rekordu do usunięcia'}, 404)
+
+            try:
+                db.session.delete(record_to_delete)
+                db.session.commit()
+
+                return jsonify({'success': True})
+            except IntegrityError as e:
+                db.session.rollback()
+                return jsonify({'error': 'Nie można usunąć rekordu z powodu ograniczenia integralności'}, 500)
+        except NoSuchTableError:
+            return jsonify({'error': 'Tabela nie istnieje'}, 404)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/main')
@@ -255,5 +340,9 @@ def pracownicy():
 @app.route('/dodawanie')
 def dodawanie():
     return render_template('dodawanie.html')
+
+@app.route('/usuwanie')
+def usuwanie():
+    return render_template('usuwanie.html')
 
 
