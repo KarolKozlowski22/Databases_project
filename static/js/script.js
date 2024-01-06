@@ -30,6 +30,10 @@ function przekieruj_7() {
     window.location.href = '/usuwanie';
 }
 
+function przekieruj_8() {
+    window.location.href = '/widoki';
+}
+
 
 function usunZawartoscTabeli() {
     var selectedTable = document.getElementById('select-table').value;

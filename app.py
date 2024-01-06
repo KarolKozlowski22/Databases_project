@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from sqlalchemy import text, inspect
 from sqlalchemy.exc import NoSuchTableError, IntegrityError
 from models.models import Lotnisko, Przyloty, Odloty, PasStartowy, Pasazer, Samolot, Pracownik, db
+from datetime import time
 
 import json
 from os import environ
@@ -304,6 +305,39 @@ def usun_zawartosc_tabeli():
             return jsonify({'error': 'Tabela nie istnieje'}, 404)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+@app.route('/zobacz-widok', methods=['GET'])
+def get_widok():
+    try:
+        view_name = request.args.get('view')
+
+        if view_name is None:
+            return jsonify({'error': 'Brak nazwy widoku'}, 400)
+
+        inspector = inspect(db.engine)
+
+        if view_name not in inspector.get_view_names():
+            return jsonify({'error': 'Widok nie istnieje'}, 404)
+
+        raw_query = text(f'SELECT * FROM {view_name}')
+
+        connection = db.engine.connect()
+        result = connection.execute(raw_query)
+
+        columns = result.keys()
+        view_data = [dict(zip(columns, row)) for row in result]
+
+        for row in view_data:
+            for key, value in row.items():
+                if isinstance(value, time):
+                    row[key] = value.strftime('%H:%M:%S')
+
+        return jsonify({'view_data': view_data})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}, 500)
+    
 
 @app.route('/main')
 def glowna_strona():
@@ -336,5 +370,9 @@ def dodawanie():
 @app.route('/usuwanie')
 def usuwanie():
     return render_template('usuwanie.html')
+
+@app.route('/widoki')
+def widoki():
+    return render_template('widoki.html')
 
 
