@@ -31,3 +31,23 @@ function przekieruj_7() {
 }
 
 
+function usunZawartoscTabeli() {
+    var selectedTable = document.getElementById('select-table').value;
+
+    fetch(`/usun-zawartosc-tabeli?tabela=${selectedTable}`, {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data && data.success) {
+            alert('Zawartość tabeli została pomyślnie usunięta.');
+        } else {
+            alert('Wystąpił błąd podczas usuwania zawartości tabeli.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Wystąpił błąd podczas komunikacji z serwerem.');
+    });
+}
+
