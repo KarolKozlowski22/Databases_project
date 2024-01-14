@@ -1,14 +1,14 @@
 function generujFormularz() {
-    var tabela = document.getElementById('select-table').value;
-    var formularzDiv = document.getElementById('formularz-div');
-    var formularzHTML = '';
+    const tabela = document.getElementById('select-table').value;
+    let formularzDiv = document.getElementById('formularz-div');
+    let formularzHTML = '';
 
     formularzDiv.innerHTML = '';
 
     fetch(`/kolumny-tabeli?tabela=${tabela}`)
         .then(response => response.json())
         .then(data => {
-            var kolumny = data.kolumny;
+            const kolumny = data.kolumny;
             formularzHTML += '<form id="dane-form">';
             kolumny.forEach(function (kolumna) {
                 formularzHTML += `
@@ -27,15 +27,14 @@ function generujFormularz() {
 
 function wykonajAlterTable(tabela) {
 
-    var form = document.getElementById('dane-form').getElementsByClassName('form-control');
+    const form = document.getElementById('dane-form').getElementsByClassName('form-control');
     
-    var formObject={};
-    for (var i = 0; i < form.length; i++) {
-        var key = form[i].id;
-        var value = form[i].value;
+    let formObject={};
+    for (let i = 0; i < form.length; i++) {
+        const key = form[i].id;
+        const value = form[i].value;
         formObject[key] = value;
     }
-    console.log(formObject);
 
     fetch(`/wykonaj-alter-table?tabela=${tabela}`, {
         method: 'POST',

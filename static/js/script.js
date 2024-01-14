@@ -1,5 +1,5 @@
 function przekieruj_1() {
-    window.location.href = '/tabela_lotnisk';
+    window.location.href = '/tabele';
 }
 
 function przekieruj_2() {
@@ -36,7 +36,7 @@ function przekieruj_8() {
 
 
 function usunZawartoscTabeli() {
-    var selectedTable = document.getElementById('select-table').value;
+    const selectedTable = document.getElementById('select-table').value;
 
     fetch(`/usun-zawartosc-tabeli?tabela=${selectedTable}`, {
         method: 'DELETE',

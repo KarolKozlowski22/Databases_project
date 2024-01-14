@@ -1,6 +1,5 @@
 function wyswietlWidok() {
-    var nazwa_widoku = document.getElementById('select-table').value;
-    console.log(nazwa_widoku);
+    const nazwa_widoku = document.getElementById('select-table').value;
     fetch(`/zobacz-widok?view=${nazwa_widoku}`)
         .then(response => response.json())
         .then(data => {

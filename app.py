@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 from sqlalchemy import text, inspect
 from sqlalchemy.exc import NoSuchTableError, IntegrityError
-from models.models import Lotnisko, Przyloty, Odloty, PasStartowy, Pasazer, Samolot, Pracownik, db
+from models.models import db, Lotnisko, Przyloty, Odloty, PasStartowy, Pasazer, PasazerOdlot, PasazerPrzylot, Pracownik 
 from datetime import time
 
 import json
@@ -10,7 +10,7 @@ from os import environ
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
 
-
+# Inicjalizacja bazy danych
 with app.app_context():
     db.init_app(app)
     db.create_all()
@@ -198,8 +198,6 @@ def get_kolumny_tabeli():
     
     return jsonify({'kolumny': kolumny})
 
-
-
 @app.route('/wykonaj-alter-table', methods=['POST'])
 def wykonaj_alter_table():
     try:
@@ -231,19 +229,17 @@ def wykonaj_alter_table():
                 return jsonify({'success': True})
             except Exception as e:
                 db.session.rollback()
-                print(e)
                 return jsonify({'error': str(e)}), 500
         except NoSuchTableError:
             return jsonify({'error': 'Tabela nie istnieje'}, 404)
+        
     except Exception as e:
-        print(e)
         return jsonify({'error': str(e)}), 500
     
 @app.route('/usun', methods=['DELETE'])
 def usun_wiersz():
     try:
         tabela = request.args.get('tabela')
-        # id_field_name = f'{tabela.lower()}_id'
         id_value = request.args.get('id')
 
         if tabela is None or id_value is None:
@@ -343,7 +339,7 @@ def get_widok():
 def glowna_strona():
     return render_template('index.html')
 
-@app.route('/tabela_lotnisk')
+@app.route('/tabele')
 def tabela_lotnisk():
     return render_template('tabele.html')
 

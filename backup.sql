@@ -897,9 +897,67 @@ ALTER TABLE ONLY public.przyloty
     ADD CONSTRAINT samolot_przyloty_fk FOREIGN KEY (samolot_id) REFERENCES public.samolot(samolot_id);
 
 
--- Completed on 2023-12-30 14:58:09
+CREATE VIEW public.widok_przyloty_lotniska_pasazerowie AS
+SELECT 
+    p.przylot_id,
+    p.data_przylotu,
+    p.godzina_przylotu,
+    p.numer_rejsu,
+    l.nazwa_lotniska,
+    l.miasto,
+    l.kod_lotniska,
+    l.kraj,
+    pas.imie AS imie_pasazera,
+    pas.nazwisko AS nazwisko_pasazera,
+    pas.narodowosc AS narodowosc_pasazera
+FROM przyloty p
+JOIN lotnisko l ON p.lotnisko_id = l.lotnisko_id
+LEFT JOIN pasazer_przylot pp ON p.przylot_id = pp.przylot_id
+LEFT JOIN pasazer pas ON pp.pasazer_id = pas.pasazer_id;
 
---
--- PostgreSQL database dump complete
---
+
+CREATE VIEW public.widok_odloty_lotniska_samoloty_pracownicy AS
+SELECT 
+    o.odlot_id,
+    o.data_odlotu,
+    o.godzina_odlotu,
+    o.numer_rejsu,
+    l.nazwa_lotniska,
+    l.miasto,
+    l.kod_lotniska,
+    l.kraj,
+    s.numer_seryjny AS numer_seryjny_samolotu,
+    s.model_samolotu,
+    s.linia_lotnicza,
+    pr.imie AS imie_pracownika,
+    pr.nazwisko AS nazwisko_pracownika,
+    pr.narodowosc AS narodowosc_pracownika
+FROM odloty o
+JOIN lotnisko l ON o.lotnisko_id = l.lotnisko_id
+JOIN samolot s ON o.samolot_id = s.samolot_id
+LEFT JOIN pracownik pr ON s.samolot_id = pr.lotnisko_id;
+
+CREATE VIEW public.widok_pasazerowie_lotniska_odloty_przyloty AS
+SELECT 
+    pas.pasazer_id,
+    pas.imie,
+    pas.nazwisko,
+    pas.narodowosc,
+    l.nazwa_lotniska,
+    l.miasto,
+    l.kod_lotniska,
+    l.kraj,
+    o.data_odlotu,
+    o.godzina_odlotu,
+    o.numer_rejsu AS numer_rejsu_odlotu,
+    p.data_przylotu,
+    p.godzina_przylotu,
+    p.numer_rejsu AS numer_rejsu_przylotu
+FROM pasazer pas
+JOIN pasazer_odlot po ON pas.pasazer_id = po.pasazer_id
+JOIN odloty o ON po.odlot_id = o.odlot_id
+JOIN lotnisko l ON o.lotnisko_id = l.lotnisko_id
+LEFT JOIN pasazer_przylot pp ON pas.pasazer_id = pp.pasazer_id
+LEFT JOIN przyloty p ON pp.przylot_id = p.przylot_id;
+
 

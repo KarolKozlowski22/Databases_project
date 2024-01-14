@@ -1,18 +1,17 @@
 function generujFormularz() {
-    var tabela = document.getElementById('select-table').value;
-    var formularzDiv = document.getElementById('formularz-div');
-    var formularzHTML = '';
-
+    const tabela = document.getElementById('select-table').value;
+    let formularzDiv = document.getElementById('formularz-div');
+    let formularzHTML = '';
+    console.log(tabela);
     formularzDiv.innerHTML = '';
 
-    var idFieldName = `${tabela}_id`; 
+    let idFieldName = `${tabela}_id`; 
 
     fetch(`/kolumny-tabeli?tabela=${tabela}`)
         .then(response => response.json())
         .then(data => {
-            var kolumny = data.kolumny;
+            const kolumny = data.kolumny;
             kolumny.forEach(function (kolumna) {
-                // console.log(idFieldName, kolumna.toLowerCase());
                 if (kolumna.toLowerCase() === idFieldName) {
                     idFieldName = kolumna;
                 }
@@ -40,7 +39,7 @@ function generujFormularz() {
 
 
 function usunWiersz(tabela, idFieldName) {
-    var id = document.getElementById(idFieldName).value;
+    const id = document.getElementById(idFieldName).value;
 
     if (!id) {
         alert('Wprowadź wartość ID do usunięcia.');

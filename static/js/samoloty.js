@@ -1,17 +1,16 @@
 function znajdzSamoloty() {
     const selectedId = document.getElementById('samoloty-lotnisko-id').value;
 
-    var samolotyTableBody = document.getElementById('samoloty-table');
+    let samolotyTableBody = document.getElementById('samoloty-table');
     samolotyTableBody.innerHTML = '';
 
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open('GET', `/najczesciej_uzywane_samoloty?lotnisko_id=${selectedId}`, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            var data = JSON.parse(xhr.responseText);
-            console.log(data);
+            const data = JSON.parse(xhr.responseText);
             data.najczesciej_uzywane_samoloty.forEach(function (item) {
-                var row = document.createElement('tr');
+                let row = document.createElement('tr');
                 console.log(item);
                 row.innerHTML = `
                     <td>${item.liczba_odlotow}</td>

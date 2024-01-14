@@ -1,5 +1,5 @@
 function pobierzDane() {
-    var tabela = document.getElementById('select-table').value;
+    const tabela = document.getElementById('select-table').value;
 
     fetch(`/dane?tabela=${tabela}`)
         .then(response => response.json())
@@ -14,7 +14,7 @@ function pobierzDane() {
 }
 
 function wyswietlTabele(dane) {
-    var tabelaDiv = document.getElementById('tabela-danych');
+    let tabelaDiv = document.getElementById('tabela-danych');
     tabelaDiv.innerHTML = '';
 
     if (dane.length === 0) {
@@ -22,22 +22,22 @@ function wyswietlTabele(dane) {
         return;
     }
 
-    var table = document.createElement('table');
+    let table = document.createElement('table');
     table.classList.add('table', 'table-bordered', 'table-striped'); 
-    var headers = Object.keys(dane[0]);
+    let headers = Object.keys(dane[0]);
 
-    var headerRow = document.createElement('tr');
+    let headerRow = document.createElement('tr');
     headers.forEach(header => {
-        var th = document.createElement('th');
+        let th = document.createElement('th');
         th.textContent = header;
         headerRow.appendChild(th);
     });
     table.appendChild(headerRow);
 
     dane.forEach(row => {
-        var tr = document.createElement('tr');
+        let tr = document.createElement('tr');
         headers.forEach(header => {
-            var td = document.createElement('td');
+            let td = document.createElement('td');
             td.textContent = row[header];
             tr.appendChild(td);
         });
